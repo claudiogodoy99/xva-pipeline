@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: xva-batch-controller-api
+  name: xva-batch-controller-api
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: xva-batch-controller-api
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: xva-batch-controller-api
+    spec:
+      containers:
+      - image: xvareg.azurecr.io/xva-batch-controller-api:v1
+        name: xva-batch-controller-api
+        ports:
+        - containerPort: 8080
+        resources: {}
+status: {}

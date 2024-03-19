@@ -1,15 +1,18 @@
 ﻿using Azure;
 using Azure.Messaging.EventHubs.Consumer;
+using Microsoft.Extensions.Configuration;
 using System.Diagnostics;
 
-var connectionString = "<< CONNECTION STRING FOR THE EVENT HUBS NAMESPACE >>";
-var eventHubName = "<< NAME OF THE EVENT HUB >>";
-var consumerGroup = EventHubConsumerClient.DefaultConsumerGroupName;
+var configuration = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+            .Build();
 
-var consumer = new EventHubConsumerClient(
-    consumerGroup,
-    connectionString,
-    eventHubName);
+
+
+
+var consumer = DependencyFactory.CreateEventHubConsumerClient(configuration);
+var service = DependencyFactory.CreateFileEventConsumerService(configuration);
 
 try
 {
@@ -19,7 +22,9 @@ try
         await foreach (PartitionEvent partitionEvent in consumer.ReadEventsAsync())
         {
             string readFromPartition = partitionEvent.Partition.PartitionId;
-            //byte[] eventBodyBytes = partitionEvent.Data.EventBody.ToObject<ob>;
+            var triggerEvent = partitionEvent.Data.EventBody.ToObjectFromJson<StartingEvent>();
+
+            await service.ConsumeEvent(triggerEvent);
         }
     }
 }
@@ -32,3 +37,4 @@ finally
 {
     await consumer.CloseAsync();
 }
+

@@ -5,7 +5,7 @@ public class BatchCommandService : IBatchCommandService
 
     private readonly Dictionary<string, Application> _applications;
     private const string noneService = "none";
-    private const string command = @"/bin/sh env > output.txt";
+    private const string command = @"/bin/sh -c env > output.txt";
 
     public BatchCommandService(Dictionary<string, Application> applications)
     {

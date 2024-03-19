@@ -23,18 +23,18 @@ public class BatchService : IBatchService
         _configuration = configuration;
     }
 
-    public async Task TriggerBookXVA(string fileName, string outPutFileName, string appId)
+    public async Task TriggerBookXVA(BookModel model)
     {
-        var jobId = JobIdFromFileName(fileName);
+        var jobId = model.JobIdFromFileName();
 
-        Console.WriteLine($"Triggering XVA Book for input file: {fileName}");
+        Console.WriteLine($"Triggering XVA Book for input file: {model.FileName}");
 
         await CreateJobIfNotExists(jobId);
-        var task = CreateTask(fileName, jobId, outPutFileName,appId);
+        var task = CreateTask(model.FileName, jobId, model.OutputFileName, model.AppId);
 
         await _batchClient.JobOperations.AddTaskAsync(jobId, task);
 
-        Console.WriteLine($"Task: {task.Id}, Triggered on Job: {fileName}");
+        Console.WriteLine($"Task: {task.Id}, Triggered on Job: {model.FileName}");
     }
 
     public async Task CreateJobIfNotExists(string jobId)
@@ -81,6 +81,8 @@ public class BatchService : IBatchService
                                 uploadOptions: new OutputFileUploadOptions(
                                     uploadCondition: OutputFileUploadCondition.TaskCompletion));
 
+
+
         var task = new CloudTask(_configuration.TaskId, _batchCommandService.GetCommand(inputFileName,outPutFileName,appId))
         {
             ResourceFiles = new List<ResourceFile> { inputFile },
@@ -90,13 +92,4 @@ public class BatchService : IBatchService
 
         return task;
     }
-
-    private string JobIdFromFileName(string fileName)
-    {
-        var strs = fileName.Split('.');
-        if (strs.Length < 2) throw new Exception("Invalid Input");
-
-        return strs[0];
-    }
-
 }

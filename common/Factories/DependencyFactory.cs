@@ -1,3 +1,4 @@
+using Azure.Messaging.EventHubs.Consumer;
 using Azure.Storage;
 using Azure.Storage.Blobs;
 using Microsoft.Azure.Batch;
@@ -39,6 +40,34 @@ public static class DependencyFactory
         return service;
     }
 
+    public static IFileEventConsumerService CreateFileEventConsumerService(IConfiguration configuration)
+    {
+        var client = new HttpClient();
+        client.BaseAddress = new Uri("https://pokeapi.co/api/v2/");
+        var service = new RandomApiService(client);
+        var storageService = DependencyFactory.CreateStorageService(configuration);
+        var configs = new BatchServiceConfiguration();
+        configuration.GetSection("BatchConfiguration").Bind(configs);
+        var evConfig = new EventHubConsumerClientConfig();
+        configuration.GetSection("BatchConfiguration").Bind(evConfig);
+
+        var bConfig = new BatchApiServiceConfig();
+        configuration.GetSection("BatchApiServiceConfig").Bind(bConfig);
+
+        var http = new HttpClient();
+        http.BaseAddress = new Uri(bConfig.BaseAdress);
+
+        return new FileEventConsumerService(storageService, configs, service,new BatchApiService(http));
+    }
+
+    public static EventHubConsumerClient CreateEventHubConsumerClient(IConfiguration configuration)
+    {
+        var evConfig = new EventHubConsumerClientConfig();
+        configuration.GetSection("EventHubConsumerClientConfig").Bind(evConfig);
+
+        return new EventHubConsumerClient(evConfig.ConsumerGroup,evConfig.ConnectionString,evConfig.EventHubName);
+    }
+
     public static IStorageService CreateStorageService(IConfiguration configuration)
     {
         return new StorageService(CreateBlobServiceClient(configuration));
@@ -70,3 +99,14 @@ public class StorageClientConfig
     public string AccountName { get; set; }
     public string AccountKey { get; set; }
 }
+
+public class EventHubConsumerClientConfig{
+    public string ConnectionString { get; set; }
+    public string EventHubName { get; set; }
+    public string ConsumerGroup { get; set; }
+}
+
+public class BatchApiServiceConfig
+{ 
+    public string BaseAdress { get; set; }
+} 

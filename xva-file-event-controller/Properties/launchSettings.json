@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "xva-file-event-controller": {
+      "commandName": "Project"
+    },
+    "Container (Dockerfile)": {
+      "commandName": "Docker"
+    }
+  }
+}

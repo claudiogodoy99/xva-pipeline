@@ -3,6 +3,7 @@
 public class RandomApiService
 {
     private readonly HttpClient _httpClient;
+    
     public RandomApiService(HttpClient httpClient)
     {
             _httpClient = httpClient;
@@ -14,5 +15,6 @@ public class RandomApiService
         var result = await _httpClient.GetAsync("pokemon/pikachu");
 
         return result.Content.ReadAsStream();
+       
     }
 }

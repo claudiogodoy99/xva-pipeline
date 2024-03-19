@@ -5,11 +5,15 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "common", "common\common.csproj", "{6D51ED71-4440-45FC-94DC-003DCF55D2E3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "xva-batch-controller", "xva-batch-controller\xva-batch-controller.csproj", "{1E665D0F-45D1-4D66-856F-7DA6310DA3F4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "xva-batch-controller-cli", "xva-batch-controller\xva-batch-controller-cli.csproj", "{1E665D0F-45D1-4D66-856F-7DA6310DA3F4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "xva-file-controller", "xva-file-controller\xva-file-controller.csproj", "{754A2908-DBC2-4FE1-A587-AED955C04EFD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "xva-file-controller-cli", "xva-file-controller\xva-file-controller-cli.csproj", "{754A2908-DBC2-4FE1-A587-AED955C04EFD}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "mvp-xp-batching", "xva-mock\mvp-xp-batching.csproj", "{2BE3B87B-FF06-4560-A0F2-A0AF94F8E225}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "xva-file-event-controller", "xva-file-event-controller\xva-file-event-controller.csproj", "{322908D6-1179-4ADE-B502-599E15A854E1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "xva-batch-controller-api", "xva-batch-controller-api\xva-batch-controller-api.csproj", "{DEE61DAF-B4B5-4B10-B18F-4F597E338D2B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,8 +37,19 @@ Global
 		{2BE3B87B-FF06-4560-A0F2-A0AF94F8E225}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2BE3B87B-FF06-4560-A0F2-A0AF94F8E225}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2BE3B87B-FF06-4560-A0F2-A0AF94F8E225}.Release|Any CPU.Build.0 = Release|Any CPU
+		{322908D6-1179-4ADE-B502-599E15A854E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{322908D6-1179-4ADE-B502-599E15A854E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{322908D6-1179-4ADE-B502-599E15A854E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{322908D6-1179-4ADE-B502-599E15A854E1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DEE61DAF-B4B5-4B10-B18F-4F597E338D2B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DEE61DAF-B4B5-4B10-B18F-4F597E338D2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DEE61DAF-B4B5-4B10-B18F-4F597E338D2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DEE61DAF-B4B5-4B10-B18F-4F597E338D2B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D419C367-5710-4FE8-8BF8-8B5D9BF0134E}
 	EndGlobalSection
 EndGlobal

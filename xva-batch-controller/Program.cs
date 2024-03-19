@@ -3,6 +3,7 @@
 var fileName = string.Empty;
 var outPutFileName = string.Empty;
 var appId = string.Empty;
+bool deletePrevius = false; ;
 
 
 var fileNameIndex = Array.IndexOf(args, "--input");
@@ -18,6 +19,10 @@ var appIdIndex = Array.IndexOf(args, "--app");
 if (appIdIndex == -1) throw new ArgumentException("App is required");
 else appId = args[appIdIndex + 1];
 
+var deletePIdenx = Array.IndexOf(args, "--delete-previus");
+if (appIdIndex != -1) deletePrevius = true;
+
+
 
 var configuration = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())
@@ -29,13 +34,15 @@ Console.WriteLine("Initializing Service");
 
 var batchService = DependencyFactory.CreateBatchService(configuration);
 
-await batchService.DeleteJobIfExists("book_retail");
+var model = new BookModel(fileName, outPutFileName, appId);
 
-Thread.Sleep(1000 * 60 * 2);
+if(deletePrevius) {
+    await batchService.DeleteJobIfExists(model.JobIdFromFileName());
+    Thread.Sleep(1000 * 60 * 2);
+    Console.WriteLine("Deleting previous Job if it exists");
+}
 
-Console.WriteLine("Deleting previous Job if it exists");
-
-await batchService.TriggerBookXVA(fileName,outPutFileName,appId);
+await batchService.TriggerBookXVA(model);
 
 Console.WriteLine("Press any key to finish...");
 Console.ReadKey();
