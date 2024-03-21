@@ -1,10 +1,14 @@
+using Azure.Messaging.EventHubs;
 using Azure.Messaging.EventHubs.Consumer;
+using Azure.Messaging.EventHubs.Producer;
 using Azure.Storage;
 using Azure.Storage.Blobs;
 using Microsoft.Azure.Batch;
 using Microsoft.Azure.Batch.Auth;
 using Microsoft.Azure.Batch.Protocol;
 using Microsoft.Extensions.Configuration;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 
 public static class DependencyFactory
 {
@@ -48,8 +52,8 @@ public static class DependencyFactory
         var storageService = DependencyFactory.CreateStorageService(configuration);
         var configs = new BatchServiceConfiguration();
         configuration.GetSection("BatchConfiguration").Bind(configs);
-        var evConfig = new EventHubConsumerClientConfig();
-        configuration.GetSection("BatchConfiguration").Bind(evConfig);
+        var evConfig = new EventHubClientConfig();
+        configuration.GetSection("EventHubClientConfig").Bind(evConfig);
 
         var bConfig = new BatchApiServiceConfig();
         configuration.GetSection("BatchApiServiceConfig").Bind(bConfig);
@@ -57,15 +61,34 @@ public static class DependencyFactory
         var http = new HttpClient();
         http.BaseAddress = new Uri(bConfig.BaseAdress);
 
-        return new FileEventConsumerService(storageService, configs, service,new BatchApiService(http));
+        return new FileEventConsumerService(storageService, configs, service, new BatchApiService(http));
     }
 
     public static EventHubConsumerClient CreateEventHubConsumerClient(IConfiguration configuration)
     {
-        var evConfig = new EventHubConsumerClientConfig();
-        configuration.GetSection("EventHubConsumerClientConfig").Bind(evConfig);
+        var evConfig = new EventHubClientConfig();
+        configuration.GetSection("EventHubClientConfig").Bind(evConfig);
 
-        return new EventHubConsumerClient(evConfig.ConsumerGroup,evConfig.ConnectionString,evConfig.EventHubName);
+        return new EventHubConsumerClient(evConfig.ConsumerGroup, evConfig.ConnectionString);
+    }
+
+    public static EventProcessorClient CreateEventHubProcessor(IConfiguration configuration)
+    {
+        var evConfig = new EventHubClientConfig();
+        configuration.GetSection("EventHubClientConfig").Bind(evConfig);
+        var blob = CreateBlobServiceClient(configuration);
+        var bClient = blob.GetBlobContainerClient("event-hub");
+        if(bClient == null) bClient = blob.CreateBlobContainer("event-hub");
+
+        return new EventProcessorClient(bClient, evConfig.ConsumerGroup, evConfig.ConnectionString);
+    }
+
+    public static EventHubProducerClient CreateEventHubsProducerClient(IConfiguration configuration)
+    {
+        var evConfig = new EventHubClientConfig();
+        configuration.GetSection("EventHubClientConfig").Bind(evConfig);
+
+        return new EventHubProducerClient(evConfig.ConnectionString);
     }
 
     public static IStorageService CreateStorageService(IConfiguration configuration)
@@ -87,8 +110,16 @@ public static class DependencyFactory
     }
 }
 
+
 public class BatchClientConfig
 {
+    public BatchClientConfig()
+    {
+        BatchAccountName = string.Empty;
+        BatchAccountKey = string.Empty;
+        BatchAccountUrl = string.Empty;
+    }
+
     public string BatchAccountName { get; set; }
     public string BatchAccountKey { get; set; }
     public string BatchAccountUrl { get; set; }
@@ -96,17 +127,35 @@ public class BatchClientConfig
 
 public class StorageClientConfig
 {
+    public StorageClientConfig()
+    {
+        AccountName = string.Empty;
+        AccountKey = string.Empty;
+    }
     public string AccountName { get; set; }
     public string AccountKey { get; set; }
 }
 
-public class EventHubConsumerClientConfig{
+public class EventHubClientConfig
+{
+    public EventHubClientConfig()
+    {
+        ConnectionString = string.Empty;
+        EventHubName = string.Empty;
+        ConsumerGroup = string.Empty;
+    }
     public string ConnectionString { get; set; }
     public string EventHubName { get; set; }
     public string ConsumerGroup { get; set; }
 }
 
-public class BatchApiServiceConfig
-{ 
+public class BatchApiServiceConfig 
+{
+    public BatchApiServiceConfig()
+    {
+        BaseAdress = string.Empty;
+    }
+
+  
     public string BaseAdress { get; set; }
-} 
+}

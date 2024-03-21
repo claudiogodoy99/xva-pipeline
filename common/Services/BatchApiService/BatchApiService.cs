@@ -17,5 +17,7 @@ public class BatchApiService : IBatchApiService
         HttpContent content = new StringContent(jsonBody, System.Text.Encoding.UTF8, "application/json");
 
         var result = await _httpClient.PostAsync("api/book", content);
+
+        Console.WriteLine($"{DateTime.Now} - Info XVA API Response: {result.StatusCode}");
     }
 }

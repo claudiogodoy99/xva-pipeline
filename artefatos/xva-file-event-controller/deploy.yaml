@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: xva-file-event-controller
+  name: xva-file-event-controller
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: xva-file-event-controller
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: xva-file-event-controller
+    spec:
+      containers:
+      - image: xvareg.azurecr.io/xva-file-event-controller:v1
+        name: xva-file-event-controller
+        resources: {}
+

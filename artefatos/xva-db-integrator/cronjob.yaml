@@ -1,0 +1,14 @@
+apiVersion: batch/v1            ## The version of the Kubernetes API
+kind: CronJob                        ## The type of object for Cron jobs
+metadata:
+  name: cron-xva-db-integrator
+spec:
+  schedule: "*/1 * * * *"            ## Defined schedule using the *nix style cron syntax
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: xva-db-integrator
+            image: xvareg.azurecr.io/xva-db-integrator:v1            ## Image used
+          restartPolicy: OnFailure    ##  Restart Policy in case container failed

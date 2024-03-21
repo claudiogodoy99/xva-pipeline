@@ -1,17 +1,15 @@
 ﻿
 using Azure.Messaging.EventHubs;
-using Azure.Messaging.EventHubs.Producer;
-using Microsoft.Azure.Amqp.Framing;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using System.Data;
 
 var configuration = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+            .AddJsonFile("appSettings.json", optional: false, reloadOnChange: true)
             .Build();
 
-string connectionString = "Data Source=YourServer;Initial Catalog=Library;Integrated Security=True;";
+string connectionString = configuration.GetConnectionString("sql") ?? throw new Exception("Sql Connection is required");
 
 var batch = new Dictionary<string, EventData>();
 var producerClient = DependencyFactory.CreateEventHubsProducerClient(configuration);
@@ -23,7 +21,7 @@ try
 {
     connection.Open();
 
-    string query = "SELECT * FROM Schedule WHERE status = 'Pending'";
+    string query = "SELECT * FROM Simulation WHERE status = 'Pending'";
 
     using SqlCommand command = new SqlCommand(query, connection);
     using SqlDataReader reader = command.ExecuteReader();
@@ -39,7 +37,7 @@ try
 }
 catch (Exception ex)
 {
-    Console.WriteLine($"Error: {ex.Message}");
+    Console.Error.WriteLine($"{DateTime.Now } - Error: {ex.Message}");
 }
 finally
 {
@@ -52,7 +50,7 @@ finally
 
 await producerClient.SendAsync(batch.Values);
 
-Console.WriteLine($"Total of {batch.Count} Triggered on Event Hubs");
+Console.WriteLine($"{DateTime.Now} -  Total of {batch.Count} Triggered on Event Hubs");
 
 int rowsAffected = 0;
 
@@ -62,7 +60,7 @@ try
     var idsToUpdate = batch.Keys.ToList();
 
     string query = "UP";
-    string updateQuery = "UPDATE Schedule SET status = 'Running' WHERE id IN ({0})";
+    string updateQuery = "UPDATE Simulation SET status = 'Running' WHERE id IN ({0})";
     string idPlaceholders = string.Join(",", batch.Select((id, index) => $"@Id{index}"));
     updateQuery = string.Format(updateQuery, idPlaceholders);
 
@@ -79,7 +77,7 @@ try
 }
 catch (Exception ex)
 {
-    Console.WriteLine($"Error: {ex.Message}");
+    Console.WriteLine($"{DateTime.Now} -  Error: {ex.Message}");
 }
 finally
 {
@@ -90,4 +88,4 @@ finally
 }
 
 
-Console.WriteLine($"Total of {rowsAffected} updated on DataBase");
+Console.WriteLine($"{DateTime.Now} - Total of {rowsAffected} updated on DataBase");

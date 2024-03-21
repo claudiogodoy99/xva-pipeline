@@ -23,6 +23,10 @@ public class BatchService : IBatchService
         _configuration = configuration;
     }
 
+    public IPagedEnumerable<CloudJob> GetAllJobs(){
+         return _batchClient.JobOperations.ListJobs();
+    }
+
     public async Task TriggerBookXVA(BookModel model)
     {
         var jobId = model.JobIdFromFileName();
@@ -61,12 +65,14 @@ public class BatchService : IBatchService
         try
         {
             await _batchClient.JobOperations.DeleteJobAsync(jobId);
-        }   
+        }
         catch (BatchException ex)
         {
             if (ex.RequestInformation?.HttpStatusCode == System.Net.HttpStatusCode.NotFound) return;
         }
-
+        catch (Exception ex){
+            Console.Error.WriteLine($"{DateTime.Now} - Error on deleting job {jobId}: Ex: {ex.Message}");
+        }
     }
 
     private CloudTask CreateTask(string inputFileName, string jobId,string outPutFileName,string appId)

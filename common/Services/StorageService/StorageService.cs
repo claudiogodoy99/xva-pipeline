@@ -39,6 +39,15 @@ public class StorageService : IStorageService
         await blobClient.UploadAsync(stream);
     }
 
+    public async Task CleanContainer(string containerName)
+    {
+        var blobContainerClient = GetBlobContainerClient(containerName);
+
+        await blobContainerClient.DeleteAsync();
+        await Task.Delay(1000 * 30);
+        await blobContainerClient.CreateAsync();
+    }
+
     public async Task<bool> BlobExist(string containerName, string blobFileName)
     {
         var blobClient = CreateBlobClient(containerName, blobFileName);
