@@ -17,6 +17,8 @@ Quando determinadas condições são atendidas ou eventos ocorrem no banco de da
 
 - `xva-batch-gc`: Este componente é responsável por limpar arquivos no Azure Storage e gerenciar tarefas na Conta do Azure Batch. Ele verifica periodicamente arquivos expirados ou não utilizados no Azure Storage e os exclui. Também monitora e gerencia tarefas concluídas ou abandonadas na Conta do Azure Batch, garantindo uma utilização eficiente dos recursos.
 
+![image](./images/diagram.png)
+
 ```dotnetcli
 +------------------------------------------+
 |              SQL On-Premises             |
@@ -73,5 +75,3 @@ Quando determinadas condições são atendidas ou eventos ocorrem no banco de da
 +------------------------------------------+
 
 ```
-
-[!image](./images/diagram.png)
