@@ -147,9 +147,25 @@ kubectl apply -f .\artefatos\xva-batch-controller-api\deploy.yaml
 kubectl apply -f .\artefatos\xva-batch-controller-api\service.yaml
 ```
 
+### xva-file-controller
+
+Ele chama uma API externa, que é uma API Python publicada localmente. A API externa gera um arquivo de entrada com base nos dados do evento recebido. Após gerar o arquivo,ele o envia para o Azure Storage para armazenamento e uso posterior. Além disso, este componente se comunica com xva-batch-controller-api por meio de chamadas HTTP. Foi desenhado para ser uma `cli`, possibilitando teste locais.
+
+Parâmetros:
+
+- `--bookname`: O nome do `book_xva` que o programa gerará o arquivo.
+- `--booktype`: O tipo do`book_xva` (exemplo: `cpp`,`py`).
+- `--filetype`: A extensão do arquivo que será gerado pelo programa.
+
+Exemplo:
+
+```dotnetcli
+dotnet run --bookname "reatil" --booktype "cpp" --filetype ".json"
+```
+
 ### xva-file-event-controller
 
-Ao receber eventos do Event Hub, este contêiner os processa. Ele chama uma API externa, que é uma API Python publicada localmente. A API externa gera um arquivo de entrada com base nos dados do evento recebido. Após gerar o arquivo,  `xva-file-event-controller` o envia para o Azure Storage para armazenamento e uso posterior. Além disso, este componente se comunica com xva-batch-controller-api por meio de chamadas HTTP.
+Ao receber eventos do Event Hub, este contêiner os processa. Ele chama uma API externa, que é uma API Python publicada localmente. A API externa gera um arquivo de entrada com base nos dados do evento recebido. Após gerar o arquivo,ele o envia para o Azure Storage para armazenamento e uso posterior. Além disso, este componente se comunica com xva-batch-controller-api por meio de chamadas HTTP.
 
 Docker Build/Run:
 ```sh
