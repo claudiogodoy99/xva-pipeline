@@ -80,7 +80,7 @@ A arquitetura deste repo é modular e todos os componentes podem ser rodados via
 - [Azure Batch Account](https://learn.microsoft.com/azure/batch/accounts)
 - [Azure Event Hubs](https://learn.microsoft.com/azure/event-hubs/event-hubs-features)
 
-## Como cria uma imagem personalizada para usar no Pool do Batch Account
+## Como criar uma imagem personalizada para usar no Pool do Batch Account
 
 ## Configuração e Deployment dos componentes
 
