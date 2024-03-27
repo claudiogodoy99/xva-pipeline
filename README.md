@@ -81,6 +81,21 @@ A arquitetura deste repo é modular e todos os componentes podem ser rodados via
 - [Azure Event Hubs](https://learn.microsoft.com/azure/event-hubs/event-hubs-features)
 
 ## Como criar uma imagem personalizada para usar no Pool do Batch Account
+Esta seção aponta o metódo para criação de uma imagem baseada em Red Hat para ser usada em um pool de Azure Batch. 
+
+  - Requisitos para máquina virtual modelo; 
+      - Utilizar imagens Gen1.
+      - Configurar seguraça Standard.
+      - Em caso de criação de uma máquina virtual nova para esta finalidade, utilizar usuário em vez de par de chaves SSH.
+  
+  
+  - Seguir com o fluxo normal de criação e aguardar a implantação da máquina virtual finalizar.
+  - Acessar máquina virtual criada no passo anterior e navegar até o menu de discos.
+  - Selecionar o disco de Sistema Operacional e depois na opção de criar uma imagem.
+  - No menu de criação de imagem , seguir o fluxo criando uma nova galeria e uma nova definição de imagem (caso já tenha galeria e definições que atendam, as mesmas podem ser reutilizadas).
+  - Após criação da imagem, a mesma pode ser utilizada no Pool de Azure Batch.
+  - Após selecionar a imagem criada anteriormente, selecione segurança standard e neste mesmo passo, selecionar o OS Agent EL8.
+  - Aguarde a implantação do Pool com a imagem personalizada.
 
 ## Configuração e Deployment dos componentes
 
