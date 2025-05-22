@@ -1,6 +1,6 @@
 # XVA Laboratório
 
-Este repo tem o objetivo de documentar as provas de conceito, e estudo envolvendo XP/Microsoft, com o objetivo de criar uma pipeline para agendamento e processamento de XVA, usando [Azure Batch Account](https://learn.microsoft.com/azure/batch/).
+Este repo tem o objetivo de documentar as provas de conceito, com o objetivo de criar uma pipeline para agendamento e processamento de High Computing XVA, usando [Azure Batch Account](https://learn.microsoft.com/azure/batch/).
 
 ## Arquitetura
 
